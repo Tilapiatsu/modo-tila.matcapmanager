@@ -6,7 +6,11 @@ import os
 import sys
 from os.path import isfile, join
 
-
+''' TODO
+    - Scan the Matcap Folder to automaticaly generate the thumbnail and the form for each matcap
+    - Add an On/Off Button/command to easily turn show or hide the matcap without havig to delete it
+    - Create a scene with basic geometry and light setup to render matcap to the proper folder
+'''
 class CmdMyCustomCommand(lxu.command.BasicCommand):
     def __init__(self):
         lxu.command.BasicCommand.__init__(self)
