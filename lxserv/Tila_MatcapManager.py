@@ -3,8 +3,7 @@ import lxifc
 import lxu.command
 import modo
 import os
-import sys
-from os.path import isfile, join
+from os.path import isfile
 
 ''' TODO
     - Scan the Matcap Folder to automaticaly generate the thumbnail and the form for each matcap
@@ -22,7 +21,6 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         self.basic_SetFlags(1, lx.symbol.fCMDARG_OPTIONAL)
 
         self.matcap_name = 'tila_matcap'
-        self.matcap_image_name = 'tila_matcap_image'
 
         self.scn = modo.Scene()
 
