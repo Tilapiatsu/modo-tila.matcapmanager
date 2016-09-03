@@ -1,2 +1,5 @@
 # modo-tila.matcapmanager
-Matcap Manager is a modo kit to easily assign a matcap shader to the scene. You can choose into a pre-made library of matcap or copy your favorite one into the 'Matcaps' folder.
+Tested with Modo10.1v2 / windows 10 
+Matcap Manager is a modo kit to easily load & assign a matcap shader to the scene. Copy your favorite one into the 'Matcaps' folder. The kit automatically generate form. 
+
+Please note that a restart of modo is needed to refresh the interface.
