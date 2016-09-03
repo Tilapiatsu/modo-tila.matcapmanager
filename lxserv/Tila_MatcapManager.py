@@ -158,5 +158,5 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
     def cmd_Query(self, index, vaQuery):
         lx.notimpl()
 
-lx.bless(CmdMyCustomCommand, "tila.matcapmanager")
+lx.bless(CmdMyCustomCommand, "tila.matcap.manager")
 
