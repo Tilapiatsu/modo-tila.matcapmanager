@@ -1,9 +1,7 @@
 import lx
+import Tila_MatcapManagerModule as t
 from Tila_MatcapManagerModule import dialog
 import lxu.command
-import modo
-import os
-from os.path import isfile
 
 import Tila_MatcapManagerModule as t
 
@@ -23,10 +21,7 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
     def basic_Execute(self, msg, flags):
         reload(t)
 
-        curr_path = os.path.dirname(os.path.realpath(__file__))
-        matcap_path = os.path.join(dialog.parentPath(curr_path), "Matcaps")
-
-        dialog.open_folder(matcap_path)
+        dialog.open_folder(t.matcap_path)
 
 
     def cmd_Query(self, index, vaQuery):

@@ -19,6 +19,10 @@ def parentPath(path):
     return os.path.abspath(os.path.join(path, os.pardir))
 
 
+def print_log(message):
+    lx.out("TILA_MATCAP_MANAGER : " + message)
+
+
 # http://modo.sdk.thefoundry.co.uk/wiki/Dialog_Commands
 
 def init_custom_dialog(type, title, format, uname, ext, save_ext=None, path=None, init_dialog=False):

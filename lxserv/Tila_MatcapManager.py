@@ -1,9 +1,9 @@
 import lx
-import lxifc
 import lxu.command
 import modo
 import os
 from os.path import isfile
+import Tila_MatcapManagerModule as t
 
 ''' TODO
     - Scan the Matcap Folder to automaticaly generate the thumbnail and the form for each matcap
@@ -25,29 +25,25 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         self.scn = modo.Scene()
 
         self.curr_path = os.path.dirname(os.path.realpath(__file__))
-        self.matcap_path = os.path.join(self.parentPath(self.curr_path), "Matcaps")
 
-        self.matcaps = [f for f in os.listdir(self.matcap_path) if isfile(os.path.join(self.matcap_path, f))]
+        self.matcaps = [f for f in os.listdir(t.matcap_path) if isfile(os.path.join(t.matcap_path, f))]
+
 
     def cmd_Flags(self):
         return lx.symbol.fCMD_MODEL | lx.symbol.fCMD_UNDO
 
+
     def basic_Enable(self, msg):
         return True
+
 
     def cmd_Interact(self):
         pass
 
+
     def matcapIndex(self):
         return self.dyna_Int(0)
 
-    @staticmethod
-    def parentPath(path):
-        return os.path.abspath(os.path.join(path, os.pardir))
-
-    @staticmethod
-    def print_log(message):
-        lx.out("TILA_MATCAP_MANAGER : " + message)
 
     def manageMatcap(self, shader, image, image_to_import):
         assign_image = False
@@ -63,16 +59,18 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
             if assign_image:
                 self.assignImage(shader, os.path.basename(image_to_import)[:-4])
             else:
-                self.print_log('This matcap image is already assign')
+                t.printLog('This matcap image is already assign')
             return None
         elif image != os.path.splitext(image_to_import)[0]:
             self.replaceImage(image, image_to_import)
             if assign_image:
                 self.assignImage(shader, os.path.basename(image_to_import)[:-4])
 
+
     def updateImageNameHolder(self, shader, image):
         if shader.channel('image_name_holder').get is not image:
             shader.channel('image_name_holder').set(image)
+
 
     def createShader(self):
         shader = self.scn.addItem('matcapShader')
@@ -81,6 +79,7 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
 
         return shader
 
+
     def placeShaderOnTop(self, item):
         selection = self.scn.selected
         self.scn.select(item)
@@ -88,22 +87,26 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         lx.eval('item.channel matcapShader$glOnly true')
         self.scn.select(selection)
 
+
     def replaceImage(self, image, image_to_import):
-        lx.eval('clip.replace clip:{%s} filename:{%s} type:videoStill' % (image, os.path.join(self.matcap_path, image_to_import)))
-        self.print_log('Replace Image by : ' + image_to_import)
+        lx.eval('clip.replace clip:{%s} filename:{%s} type:videoStill' % (image, os.path.join(t.matcap_path, image_to_import)))
+        t.printLog('Replace Image by : ' + image_to_import)
+
 
     def assignImage(self, shader, image):
         selection = self.scn.selected
         self.scn.select(shader)
         lx.eval('matcap.image {%s:videoStill001}' % image)
-        self.print_log('Assigning ' + image + ' to Matcap Shader')
+        t.printLog('Assigning ' + image + ' to Matcap Shader')
         self.scn.select(selection)
 
+
     def importImage(self, image_to_import):
-        image = os.path.join(self.matcap_path, image_to_import)
+        image = os.path.join(t.matcap_path, image_to_import)
 
         lx.eval('clip.addStill "%s"' % image)
-        self.print_log('Import Image : ' + os.path.basename(image))
+        t.printLog('Import Image : ' + os.path.basename(image))
+
 
     def getMatcapImageName(self, shader):
         selection = self.scn.selected
@@ -112,6 +115,7 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         self.scn.select(selection)
         return image_name
 
+
     def clearScene(self, shader, image):
         if not self.dyna_Bool(1):
             return False
@@ -119,16 +123,17 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         else:
             if shader is not None:
                 self.scn.removeItems(shader)
-                self.print_log('Matcap shader Deleted')
+                t.printLog('Matcap shader Deleted')
             else:
-                self.print_log('No matching matcap shader in the scene')
+                t.printLog('No matching matcap shader in the scene')
             if image is not None:
                 self.scn.removeItems(image)
-                self.print_log('Matcap image Deleted')
+                t.printLog('Matcap image Deleted')
             else:
-                self.print_log('No matching matcap image in the scene')
+                t.printLog('No matching matcap image in the scene')
 
             return True
+
 
     def basic_Execute(self, msg, flags):
 
@@ -155,8 +160,10 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
 
         self.manageMatcap(matcap_shader, matcap_image, matcap_to_import)
 
+
     def cmd_Query(self, index, vaQuery):
         lx.notimpl()
+
 
 lx.bless(CmdMyCustomCommand, "tila.matcap.manager")
 

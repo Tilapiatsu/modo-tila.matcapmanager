@@ -7,7 +7,7 @@ import dialog
 
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
-matcap_path = os.path.join(dialog.parentPath(curr_path), "Matcaps")
+matcap_path = os.path.join(dialog.parentPath(curr_path), "Tila_Matcaps")
 
 
 def printLog(message):
