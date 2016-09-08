@@ -6,9 +6,7 @@ from os.path import isfile
 import Tila_MatcapManagerModule as t
 
 ''' TODO
-    - Scan the Matcap Folder to automaticaly generate the thumbnail and the form for each matcap
-    - Add an On/Off Button/command to easily turn show or hide the matcap without havig to delete it
-    - Create a scene with basic geometry and light setup to render matcap to the proper folder
+    - Add an On/Off Button/command to easily turn show or hide the matcap without having to delete it
 '''
 class CmdMyCustomCommand(lxu.command.BasicCommand):
     def __init__(self):
