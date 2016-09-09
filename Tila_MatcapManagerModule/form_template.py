@@ -1,5 +1,6 @@
 import os
 import xml.etree.cElementTree as ET
+from xml.dom import minidom
 
 
 def generateForm(path, hashkey, matcaps, matcap_path):
@@ -50,7 +51,14 @@ def generateForm(path, hashkey, matcaps, matcap_path):
         ET.SubElement(list, "atom", type="Proficiency").text = "basic"
         ET.SubElement(list, "atom", type="ProficiencyOverride").text = "default"
 
-
     tree = ET.ElementTree(configuration)
 
     tree.write(os.path.join(path, "MatcapsForm.cfg"), method='xml', encoding='utf-8', xml_declaration=True)
+
+
+def prettify(elem):
+    """Return a pretty-printed XML string for the Element.
+    """
+    rough_string = ET.tostring(elem, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="\t")

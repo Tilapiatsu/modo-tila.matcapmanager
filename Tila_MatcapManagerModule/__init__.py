@@ -8,6 +8,9 @@ import dialog
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 matcap_path = os.path.join(dialog.parentPath(curr_path), "Tila_Matcaps")
+renderer_path = os.path.join(dialog.parentPath(curr_path), "Tila_MatcapRenderer")
+
+renderer_path = os.path.join(renderer_path,"Tila_MatcapRenderer.lxo")
 
 
 def printLog(message):
@@ -37,7 +40,7 @@ def generateFormTemplate(silent=True):
     ft.generateForm(cfg_path, '91694808927', matcaps, matcap_path)
 
 
-    printLog('Form Updated! Please, restart modo to refresh it')
+    printLog('Form Updated! Please, restart Modo to refresh it')
 
     if not silent:
         dialog.init_message('info', 'Done', 'Form Updated! Please, restart Modo to refresh it.')
