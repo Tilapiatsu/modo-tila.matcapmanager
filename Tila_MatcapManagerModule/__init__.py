@@ -5,6 +5,7 @@ from os.path import isfile
 import form_template as ft
 import dialog
 
+matcap_name = 'tila_matcap'
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 matcap_path = os.path.join(dialog.parentPath(curr_path), "Tila_Matcaps")
