@@ -4,6 +4,7 @@ import modo
 import os
 from os.path import isfile
 import Tila_MatcapManagerModule as t
+from Tila_MatcapManagerModule import dialog
 
 ''' TODO
     - Add an On/Off Button/command to easily turn show or hide the matcap without having to delete it
@@ -21,8 +22,6 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         self.matcap_name = 'tila_matcap'
 
         self.scn = modo.Scene()
-
-        self.curr_path = os.path.dirname(os.path.realpath(__file__))
 
         self.matcaps = [f for f in os.listdir(t.matcap_path) if isfile(os.path.join(t.matcap_path, f))]
 
@@ -63,6 +62,8 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
             self.replaceImage(image, image_to_import)
             if assign_image:
                 self.assignImage(shader, os.path.basename(image_to_import)[:-4])
+
+
 
 
     def updateImageNameHolder(self, shader, image):
@@ -106,14 +107,6 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         t.printLog('Import Image : ' + os.path.basename(image))
 
 
-    def getMatcapImageName(self, shader):
-        selection = self.scn.selected
-        self.scn.select(shader)
-        image_name = lx.eval('matcap.image ?')[:-14]   #Sooooo tricky
-        self.scn.select(selection)
-        return image_name
-
-
     def clearScene(self, shader, image):
         if not self.dyna_Bool(1):
             return False
@@ -134,8 +127,12 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
 
 
     def basic_Execute(self, msg, flags):
-
-        matcap_to_import = self.matcaps[self.dyna_Int(0)]
+        try:
+            matcap_to_import = self.matcaps[self.dyna_Int(0)]
+        except:
+            dialog.init_message('error', 'Matcap is not found', "Matcap isn't in the folder yet. Please restart Modo to refresh the UI.")
+            lx.eval('tila.matcap.folderscan True')
+            return None
 
         try:
             matcap_shader = modo.Item(self.matcap_name)
@@ -148,7 +145,7 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
                 for j in self.matcaps:
                     name = os.path.basename(os.path.splitext(j)[0])
                     if i.name == name:
-                        matcap_image = os.path.splitext(i.name)[0]
+                        matcap_image = i.name
                         break
         except:
             matcap_image = None
