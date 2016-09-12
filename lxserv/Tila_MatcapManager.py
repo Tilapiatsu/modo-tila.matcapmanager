@@ -40,19 +40,7 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
     def matcapIndex(self):
         return self.dyna_Int(0)
 
-    def basic_Execute(self, msg, flags):
-        reload(t)
-        reload(mm)
-
-        args = user_value.query_User_Values(self, 'tilaMatcapMan.')
-
-        try:
-            matcap_to_import = self.matcaps[self.dyna_Int(0)]
-        except:
-            dialog.init_message('error', 'Matcap is not found', "Matcap isn't in the folder anymore. Please restart Modo to refresh the UI.")
-            lx.eval('tila.matcap.folderscan True')
-            return None
-
+    def assignMatcapToScene(self, matcap_to_import, affectSelection):
         try:
             matcap_shader = modo.Item(t.matcap_name)
         except:
@@ -70,11 +58,53 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         except:
             matcap_image = None
 
-        if mm.clearScene(self.dyna_Bool(1), matcap_shader, matcap_image):
+        if mm.clearScene(self.dyna_Bool(1), matcap_shader, matcap_image, affectSelection):
             return None
 
-        mm.manageMatcap(matcap_shader, matcap_image, matcap_to_import, args[2])
+        mm.manageSceneMatcap(matcap_shader, matcap_image, matcap_to_import)
 
+    def assignMatcapToSelection(self, matcap_to_import, affectSelection):
+        try:
+            matcap_shader = modo.Item(t.matcap_grp_name)
+        except:
+            matcap_shader = None
+        matcap_image = []
+
+        try:
+            for i in self.scn.items(modo.c.VIDEOSTILL_TYPE):
+                for j in self.matcaps:
+                    name = os.path.basename(os.path.splitext(j)[0])
+                    if i.name == name:
+                        matcap_image = matcap_image.append(i.name)
+        except:
+            matcap_image = []
+
+        if mm.clearScene(self.dyna_Bool(1), matcap_shader, matcap_image, affectSelection):
+            return None
+
+        mm.manageSelectionMatcap(matcap_shader, matcap_image, matcap_to_import)
+
+    def basic_Execute(self, msg, flags):
+        reload(t)
+        reload(mm)
+
+        args = user_value.query_User_Values(self, 'tilaMatcapMan.')
+
+        affectSelection_sw = args[2]
+
+        try:
+            matcap_to_import = self.matcaps[self.dyna_Int(0)]
+        except:
+            dialog.init_message('error', 'Matcap is not found',
+                                "Matcap isn't in the folder anymore. Please restart Modo to refresh the UI.")
+            lx.eval('tila.matcap.folderscan True')
+            return None
+
+        if not affectSelection_sw:
+            self.assignMatcapToScene(matcap_to_import, affectSelection_sw)
+
+        else:
+            self.assignMatcapToSelection(matcap_to_import, affectSelection_sw)
 
     def cmd_Query(self, index, vaQuery):
         lx.notimpl()

@@ -6,6 +6,7 @@ import form_template as ft
 import dialog
 
 matcap_name = 'tila_matcap'
+matcap_grp_name = 'tila_matcap_GRP'
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 matcap_path = os.path.join(dialog.parentPath(curr_path), "Tila_Matcaps")
