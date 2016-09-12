@@ -44,9 +44,7 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         reload(t)
         reload(mm)
 
-        args = user_value.query_User_Values(self, 'tilaMacapMan')
-
-        print args
+        args = user_value.query_User_Values(self, 'tilaMatcapMan.')
 
         try:
             matcap_to_import = self.matcaps[self.dyna_Int(0)]
@@ -75,7 +73,7 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         if mm.clearScene(self.dyna_Bool(1), matcap_shader, matcap_image):
             return None
 
-        mm.manageMatcap(matcap_shader, matcap_image, matcap_to_import)
+        mm.manageMatcap(matcap_shader, matcap_image, matcap_to_import, args[2])
 
 
     def cmd_Query(self, index, vaQuery):

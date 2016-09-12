@@ -1,8 +1,11 @@
 import lx
 
+
 def query_User_Value(self, index, argPrefix, argName):
     if not self.dyna_IsSet(index):
-        return lx.eval('user.value %s ?' % (argPrefix + '.' + argName))
+        return lx.eval('user.value %s ?' % (argPrefix + argName))
+
+
 
 def query_User_Values(self, argPrefix):
     userValues = []
