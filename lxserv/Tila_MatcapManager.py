@@ -6,6 +6,7 @@ from os.path import isfile
 import Tila_MatcapManagerModule as t
 from Tila_MatcapManagerModule import dialog
 from Tila_MatcapManagerModule import manage_matcaps as mm
+from Tila_MatcapManagerModule import user_value
 
 ''' TODO
     - Add an On/Off Button/command to easily turn show or hide the matcap without having to delete it
@@ -19,6 +20,9 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
 
         self.dyna_Add('clearMatcap', lx.symbol.sTYPE_BOOLEAN)
         self.basic_SetFlags(1, lx.symbol.fCMDARG_OPTIONAL)
+
+        self.dyna_Add('affectSelection_sw', lx.symbol.sTYPE_BOOLEAN)
+        self.basic_SetFlags(2, lx.symbol.fCMDARG_OPTIONAL)
 
         self.scn = modo.Scene()
 
@@ -39,6 +43,10 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
     def basic_Execute(self, msg, flags):
         reload(t)
         reload(mm)
+
+        args = user_value.query_User_Values(self, 'tilaMacapMan')
+
+        print args
 
         try:
             matcap_to_import = self.matcaps[self.dyna_Int(0)]
