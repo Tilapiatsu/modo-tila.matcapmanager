@@ -4,6 +4,8 @@ import os
 import Tila_MatcapManagerModule as t
 
 
+IndexStyle = ['brak-sp', 'brak', 'sp', 'uscore', 'none']
+
 def manageSceneMatcap(shader, image, image_to_import):
     assign_image = False
 
@@ -35,6 +37,8 @@ def manageSelectionMatcap(shader, image, image_to_import):
         placeShaderOnTop(group, False)
         name = os.path.basename(image_to_import)[:-4]
         shader = assignMaterial(name)
+
+        print getLatestMaterialCreated().name
         #lx.eval('item.parent %s %s inPlace:1' % (shader.id, group.id))
 
         assign_image = True
@@ -71,7 +75,43 @@ def CreateShaderGroup():
     return group
 
 def assignMaterial(name):
-    return lx.eval('poly.setMaterial %s {0.6 0.6 0.6} 0.8 0.04 false false false' % name)
+    return lx.eval('poly.setMaterial %s {0.0 0.0 0.0} 0.0 0.0 false false false' % name)
+
+
+def getLatestMaterialCreated():
+    i = 1
+    mat = None
+    while True:
+        try:
+            if i == 1 :
+                mat = modo.Item('Material')
+            else:
+                mat = modo.Item('Material%s' % getIteratorTemplate(i))
+
+            i = i + 1
+        except :
+            break
+
+    return mat
+
+def getIteratorTemplate(i):
+    iterator = ''
+
+    if lx.eval('pref.value application.indexStyle ?') == IndexStyle[0]:
+        iterator = ' (' + i + ')'
+
+    elif lx.eval('pref.value application.indexStyle ?') == IndexStyle[1]:
+        iterator = '(' + i + ')'
+
+    elif lx.eval('pref.value application.indexStyle ?') == IndexStyle[2]:
+        iterator = ' ' + i
+
+    elif lx.eval('pref.value application.indexStyle ?') == IndexStyle[3]:
+        iterator = '_' + i
+
+    return iterator
+
+
 
 def placeShaderOnTop(item, glOnly):
     scn = modo.Scene()
