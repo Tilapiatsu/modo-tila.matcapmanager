@@ -29,34 +29,36 @@ def manageSceneMatcap(shader, image, image_to_import):
             assignImage(shader, os.path.basename(image_to_import)[:-4])
 
 
-def manageSelectionMatcap(shader, image, image_to_import):
+def manageSelectionMatcap(masterGroup, image, image_to_import):
     assign_image = False
+    scn = modo.Scene()
 
-    if shader is None:
+    name = os.path.basename(image_to_import)[:-4]
+
+    if masterGroup is None:
         group = CreateShaderGroup()
         placeShaderOnTop(group, False)
-        name = os.path.basename(image_to_import)[:-4]
-        shader = assignMaterial(name)
 
-        print getLatestMaterialCreated().name
-        #lx.eval('item.parent %s %s inPlace:1' % (shader.id, group.id))
+        mat = createMaterialGroup(name, image_to_import, group)
 
         assign_image = True
-    '''
-    if image is None:
+    else:
+        mat = createMaterialGroup(name, image_to_import, masterGroup)
+
+        assign_image = True
+
+    print image
+
+    if image == []:
         importImage(image_to_import)
-        assignImage(shader, os.path.basename(image_to_import)[:-4])
-    elif image == os.path.splitext(image_to_import)[0]:
-        if assign_image:
-            assignImage(shader, os.path.basename(image_to_import)[:-4])
-        else:
-            t.printLog('This matcap image is already assign')
-        return None
-    elif image != os.path.splitext(image_to_import)[0]:
-        replaceImage(image, image_to_import)
-        if assign_image:
-            assignImage(shader, os.path.basename(image_to_import)[:-4])
-    '''
+        assignImage(mat, os.path.basename(image_to_import)[:-4])
+    else:
+        for i in image:
+            if i == os.path.splitext(image_to_import)[0]:
+                break
+
+        importImage(image_to_import)
+        assignImage(mat, os.path.basename(image_to_import)[:-4])
 
 
 def createShader(name):
@@ -74,27 +76,78 @@ def CreateShaderGroup():
 
     return group
 
-def assignMaterial(name):
-    return lx.eval('poly.setMaterial %s {0.0 0.0 0.0} 0.0 0.0 false false false' % name)
 
+def createMaterialGroup(name, image_to_import, group):
+    materialExist = itemExist(name + '_GRP')
 
-def getLatestMaterialCreated():
-    i = 1
-    mat = None
-    while True:
-        try:
-            if i == 1 :
-                mat = modo.Item('Material')
-            else:
-                mat = modo.Item('Material%s' % getIteratorTemplate(i))
+    assignMaterial(name + '_GRP')
 
-            i = i + 1
-        except :
-            break
+    mat = getLatestMaterialCreated(materialExist, name)
+
+    matGrp = mat.parent
+    mat.name = name + '_MAT'
+
+    if not materialExist:
+        parentShaderItem(matGrp, group)
+        mat = convertMaterialToMatcap(mat)
 
     return mat
 
+
+def itemExist(name):
+    exist = True
+    scn = modo.Scene()
+    try:
+        scn.item(name + ' (Material)')
+        exist = True
+    except LookupError:
+        exist = False
+
+    return exist
+
+def parentShaderItem(item, group):
+    lx.eval('item.parent %s %s inPlace:1' % (item.id, group.id))
+
+
+def assignMaterial(name):
+    return lx.eval('!!poly.setMaterial %s {0.0 0.0 0.0} 0.0 0.0 false false false' % name)
+
+
+def convertMaterialToMatcap(mat):
+    scn = modo.Scene()
+    name = mat.name
+    scn.select(mat)
+    lx.eval('item.setType matcapShader textureLayer')
+    mat = scn.item(name + getIteratorTemplate(2))
+    mat.name = mat.name[:-2]
+    return mat
+    #scn.select(selection)
+
+
+def getLatestMaterialCreated(exist, name):
+    scn = modo.Scene()
+
+    if exist:
+        mat = scn.item(name + '_MAT')
+    else:
+        i = 1
+        mat = None
+        while True:
+            try:
+                if i == 1 :
+                    mat = modo.Item('Material')
+                else:
+                    mat = modo.Item('Material%s' % getIteratorTemplate(i))
+
+                i = i + 1
+            except :
+                break
+
+    return mat
+
+
 def getIteratorTemplate(i):
+    i = str(i)
     iterator = ''
 
     if lx.eval('pref.value application.indexStyle ?') == IndexStyle[0]:

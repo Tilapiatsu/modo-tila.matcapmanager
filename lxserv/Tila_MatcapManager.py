@@ -65,9 +65,10 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
 
     def assignMatcapToSelection(self, matcap_to_import, affectSelection):
         try:
-            matcap_shader = modo.Item(t.matcap_grp_name)
+            matcap_masterGroup = modo.Item(t.matcap_grp_name)
         except:
-            matcap_shader = None
+            matcap_masterGroup = None
+
         matcap_image = []
 
         try:
@@ -79,10 +80,10 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         except:
             matcap_image = []
 
-        if mm.clearScene(self.dyna_Bool(1), matcap_shader, matcap_image, affectSelection):
+        if mm.clearScene(self.dyna_Bool(1), matcap_masterGroup, matcap_image, affectSelection):
             return None
 
-        mm.manageSelectionMatcap(matcap_shader, matcap_image, matcap_to_import)
+        mm.manageSelectionMatcap(matcap_masterGroup, matcap_image, matcap_to_import)
 
     def basic_Execute(self, msg, flags):
         reload(t)
