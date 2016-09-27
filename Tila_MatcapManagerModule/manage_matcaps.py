@@ -47,8 +47,6 @@ def manageSelectionMatcap(masterGroup, image, image_to_import):
 
         assign_image = True
 
-    print image
-
     if image == []:
         importImage(image_to_import)
         assignImage(mat, os.path.basename(image_to_import)[:-4])
@@ -198,36 +196,48 @@ def importImage(image_to_import):
     t.printLog('Import Image : ' + os.path.basename(image))
 
 
-def clearScene(clear, shader, image, affectSelection):
+def clearScene(shaderGroup, shader, image):
     scn = modo.Scene()
-    if not clear:
-        return False
 
+    result = False
+
+    if shaderGroup is not None:
+        scn.removeItems(shaderGroup, children=True)
+        t.printLog('Matcap shader group Deleted')
+        result = result or True
     else:
-        if not affectSelection:
-            if shader is not None:
-                scn.removeItems(shader)
-                t.printLog('Matcap shader Deleted')
-            else:
-                t.printLog('No matching matcap shader in the scene')
-            if image is not None:
-                scn.removeItems(image)
-                t.printLog('Matcap image Deleted')
-            else:
-                t.printLog('No matching matcap image in the scene')
+        t.printLog('No matching matcap shader group in the scene')
 
-            return True
-        else:
-            if shader is not None:
-                scn.removeItems(shader)
-                t.printLog('Matcap Group Deleted')
-            else:
-                t.printLog('No matching matcap group in the scene')
-            if image is not None:
-                for i in image:
-                    scn.removeItems(i)
-                t.printLog('Matcap images Deleted')
-            else:
-                t.printLog('No matching matcaps image in the scene')
+    if shader is not None:
+        scn.removeItems(shader, children=True)
+        t.printLog('Matcap Shader  Deleted')
+        result = result or True
+    else:
+        t.printLog('No matching matcap shader in the scene')
 
-            return True
+    if image is not None:
+        for i in image:
+            scn.removeItems(i)
+        t.printLog('Matcap images Deleted')
+        result = result or True
+    else:
+        t.printLog('No matching matcaps image in the scene')
+
+    return result
+
+
+def atLeastOneMeshItemInSelection():
+    scn = modo.Scene()
+
+    meshItems = [i for i in scn.items(itype='mesh') or scn.items(itype='meshInst')]
+    print meshItems
+    print scn.selected
+
+    result = False
+    for mesh in meshItems:
+        for s in scn.selected:
+            if mesh == s:
+                result = True
+                break
+
+    return result

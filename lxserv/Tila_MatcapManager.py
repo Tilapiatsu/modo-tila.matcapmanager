@@ -40,17 +40,12 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
     def matcapIndex(self):
         return self.dyna_Int(0)
 
-    def assignMatcapToScene(self, matcap_to_import, affectSelection):
-        try:
-            matcap_shader = modo.Item(t.matcap_name)
-        except:
-            matcap_shader = None
-
+    def assignMatcapToScene(self, matcap_to_import, matcap_shader, matcap_imageArr):
         matcap_image = None
 
         try:
             for i in self.scn.items(modo.c.VIDEOSTILL_TYPE):
-                for j in self.matcaps:
+                for j in matcap_imageArr:
                     name = os.path.basename(os.path.splitext(j)[0])
                     if i.name == name:
                         matcap_image = i.name
@@ -58,36 +53,16 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         except:
             matcap_image = None
 
-        if mm.clearScene(self.dyna_Bool(1), matcap_shader, matcap_image, affectSelection):
-            return None
-
         mm.manageSceneMatcap(matcap_shader, matcap_image, matcap_to_import)
 
-    def assignMatcapToSelection(self, matcap_to_import, affectSelection):
-        try:
-            matcap_masterGroup = modo.Item(t.matcap_grp_name)
-        except:
-            matcap_masterGroup = None
-
-        matcap_image = []
-
-        try:
-            for i in self.scn.items(modo.c.VIDEOSTILL_TYPE):
-                for j in self.matcaps:
-                    name = os.path.basename(os.path.splitext(j)[0])
-                    if i.name == name:
-                        matcap_image = matcap_image.append(i.name)
-        except:
-            matcap_image = []
-
-        if mm.clearScene(self.dyna_Bool(1), matcap_masterGroup, matcap_image, affectSelection):
-            return None
-
-        mm.manageSelectionMatcap(matcap_masterGroup, matcap_image, matcap_to_import)
+    def assignMatcapToSelection(self, matcap_to_import, matcap_shaderGroup, matcap_image):
+        mm.manageSelectionMatcap(matcap_shaderGroup, matcap_image, matcap_to_import)
 
     def basic_Execute(self, msg, flags):
         reload(t)
         reload(mm)
+
+        scn = modo.Scene()
 
         args = user_value.query_User_Values(self, 'tilaMatcapMan.')
 
@@ -101,11 +76,41 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
             lx.eval('tila.matcap.folderscan True')
             return None
 
+        matcap_shader = None
+        matcap_masterGroup = None
+        matcap_image = []
+
+
+        try:
+            matcap_masterGroup = modo.Item(t.matcap_grp_name)
+        except:
+            matcap_masterGroup = None
+
+        try:
+            matcap_shader = modo.Item(t.matcap_name)
+        except:
+            matcap_shader = None
+
+        matcap_image = []
+
+        try:
+            for i in self.scn.items(modo.c.VIDEOSTILL_TYPE):
+                for j in self.matcaps:
+                    name = os.path.basename(os.path.splitext(j)[0])
+                    if i.name == name:
+                        matcap_image.append(i.name)
+        except:
+            matcap_image = []
+
+        if self.dyna_Bool(1):
+            if mm.clearScene(matcap_masterGroup, matcap_shader, matcap_image):
+                return None
+
         if not affectSelection_sw:
-            self.assignMatcapToScene(matcap_to_import, affectSelection_sw)
+            self.assignMatcapToScene(matcap_to_import, matcap_shader, matcap_image)
 
         else:
-            self.assignMatcapToSelection(matcap_to_import, affectSelection_sw)
+            self.assignMatcapToSelection(matcap_to_import, matcap_masterGroup, matcap_image)
 
     def cmd_Query(self, index, vaQuery):
         lx.notimpl()

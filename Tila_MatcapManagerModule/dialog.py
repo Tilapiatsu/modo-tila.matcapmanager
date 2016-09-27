@@ -14,6 +14,7 @@ elif sys.platform == 'linux2':
 elif sys.platform == 'win32':
     def open_folder(path):
         os.startfile(path)
+        print_log('Opening path : ' + path)
 
 def parentPath(path):
     return os.path.abspath(os.path.join(path, os.pardir))

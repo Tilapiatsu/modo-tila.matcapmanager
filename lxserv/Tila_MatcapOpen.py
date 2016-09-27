@@ -24,8 +24,7 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
 
     def basic_Execute(self, msg, flags):
         reload(t)
-
-        print t.renderer_path
+        reload(dialog)
 
         if self.dyna_Int(0) == 0:
             dialog.open_folder(t.matcap_path)
