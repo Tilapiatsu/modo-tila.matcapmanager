@@ -24,7 +24,12 @@ def manageSceneMatcap(shader, image, image_to_import):
             t.printLog('This matcap image is already assign')
         return None
     elif image != os.path.splitext(image_to_import)[0]:
-        replaceImage(image, image_to_import)
+        if imageExistInMasterGroup(image):
+            importImage(image_to_import)
+            assign_image = True
+        else:
+            replaceImage(image, image_to_import, shader)
+
         if assign_image:
             assignImage(shader, os.path.basename(image_to_import)[:-4])
 
@@ -34,29 +39,31 @@ def manageSelectionMatcap(masterGroup, image, image_to_import):
     scn = modo.Scene()
 
     name = os.path.basename(image_to_import)[:-4]
+    channelName = t.matcap_imageChannelName + '_' + str(len(image))
 
     if masterGroup is None:
         group = CreateShaderGroup()
         placeShaderOnTop(group, False)
 
+        createUserChannel(channelName, group, 'string')
+        group.channel(channelName).set(name)
+
         mat = createMaterialGroup(name, image_to_import, group)
-
-        assign_image = True
     else:
+        createUserChannel(channelName, masterGroup, 'string')
+        masterGroup.channel(channelName).set(name)
         mat = createMaterialGroup(name, image_to_import, masterGroup)
-
-        assign_image = True
 
     if image == []:
         importImage(image_to_import)
-        assignImage(mat, os.path.basename(image_to_import)[:-4])
+        assignImage(mat, os.path.basename(image_to_import)[:-4], False)
     else:
         for i in image:
             if i == os.path.splitext(image_to_import)[0]:
                 break
 
         importImage(image_to_import)
-        assignImage(mat, os.path.basename(image_to_import)[:-4])
+        assignImage(mat, os.path.basename(image_to_import)[:-4], False)
 
 
 def createShader(name):
@@ -102,6 +109,21 @@ def itemExist(name):
         exist = False
 
     return exist
+
+
+def imageExistInMasterGroup(image):
+    scn = modo.Scene()
+    try:
+        masterGroup = scn.item(t.matcap_grp_name)
+
+        for ch in masterGroup.channels(t.matcap_imageChannelName + '_*'):
+            if ch.get() == image:
+                return True
+
+        return False
+
+    except:
+        return False
 
 def parentShaderItem(item, group):
     lx.eval('item.parent %s %s inPlace:1' % (item.id, group.id))
@@ -174,17 +196,24 @@ def placeShaderOnTop(item, glOnly):
     scn.select(selection)
 
 
-def replaceImage(image, image_to_import):
-    lx.eval(
-        'clip.replace clip:{%s} filename:{%s} type:videoStill' % (image, os.path.join(t.matcap_path, image_to_import)))
+def replaceImage(image, image_to_import, shader):
+    lx.eval('clip.replace clip:{%s} filename:{%s} type:videoStill' % (image, os.path.join(t.matcap_path, image_to_import)))
+    shader.channel('Image').set(image_to_import[:-4])
     t.printLog('Replace Image by : ' + image_to_import)
 
 
-def assignImage(shader, image):
+def assignImage(shader, image, createChannel=True):
     scn = modo.Scene()
     selection = scn.selected
+
     scn.select(shader)
+
     lx.eval('matcap.image {%s:videoStill001}' % image)
+
+    if createChannel:
+        createUserChannel(t.matcap_imageChannelName, shader, 'string')
+        shader.channel(t.matcap_imageChannelName).set(image)
+
     t.printLog('Assigning ' + image + ' to Matcap Shader')
     scn.select(selection)
 
@@ -241,3 +270,11 @@ def atLeastOneMeshItemInSelection():
                 break
 
     return result
+
+
+def createUserChannel(name, item, chType='matrix'):
+    try:
+        if item.channel(name) is not None:
+            pass
+    except:
+        lx.eval('channel.create name:%s type:%s item:%s' % (name, chType, item.id))

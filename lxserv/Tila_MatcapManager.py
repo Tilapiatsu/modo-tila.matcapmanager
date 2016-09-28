@@ -8,9 +8,7 @@ from Tila_MatcapManagerModule import dialog
 from Tila_MatcapManagerModule import manage_matcaps as mm
 from Tila_MatcapManagerModule import user_value
 
-''' TODO
-    - Add an On/Off Button/command to easily turn show or hide the matcap without having to delete it
-'''
+
 class CmdMyCustomCommand(lxu.command.BasicCommand):
     def __init__(self):
         lxu.command.BasicCommand.__init__(self)
@@ -40,18 +38,14 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
     def matcapIndex(self):
         return self.dyna_Int(0)
 
-    def assignMatcapToScene(self, matcap_to_import, matcap_shader, matcap_imageArr):
+    def assignMatcapToScene(self, matcap_to_import, matcap_shader):
         matcap_image = None
 
-        try:
-            for i in self.scn.items(modo.c.VIDEOSTILL_TYPE):
-                for j in matcap_imageArr:
-                    name = os.path.basename(os.path.splitext(j)[0])
-                    if i.name == name:
-                        matcap_image = i.name
-                        break
-        except:
-            matcap_image = None
+        if matcap_shader is not None:
+            try:
+                matcap_image = matcap_shader.channel(t.matcap_imageChannelName).get()
+            except:
+                matcap_image = None
 
         mm.manageSceneMatcap(matcap_shader, matcap_image, matcap_to_import)
 
@@ -107,7 +101,7 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
                 return None
 
         if not affectSelection_sw:
-            self.assignMatcapToScene(matcap_to_import, matcap_shader, matcap_image)
+            self.assignMatcapToScene(matcap_to_import, matcap_shader)
 
         else:
             self.assignMatcapToSelection(matcap_to_import, matcap_masterGroup, matcap_image)
