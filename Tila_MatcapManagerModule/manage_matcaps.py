@@ -4,8 +4,6 @@ import os
 import Tila_MatcapManagerModule as t
 
 
-IndexStyle = ['brak-sp', 'brak', 'sp', 'uscore', 'none']
-
 def manageSceneMatcap(shader, image, image_to_import):
     assign_image = False
 
@@ -170,16 +168,16 @@ def getIteratorTemplate(i):
     i = str(i)
     iterator = ''
 
-    if lx.eval('pref.value application.indexStyle ?') == IndexStyle[0]:
+    if lx.eval('pref.value application.indexStyle ?') == t.indexStyle[0]:
         iterator = ' (' + i + ')'
 
-    elif lx.eval('pref.value application.indexStyle ?') == IndexStyle[1]:
+    elif lx.eval('pref.value application.indexStyle ?') == t.indexStyle[1]:
         iterator = '(' + i + ')'
 
-    elif lx.eval('pref.value application.indexStyle ?') == IndexStyle[2]:
+    elif lx.eval('pref.value application.indexStyle ?') == t.indexStyle[2]:
         iterator = ' ' + i
 
-    elif lx.eval('pref.value application.indexStyle ?') == IndexStyle[3]:
+    elif lx.eval('pref.value application.indexStyle ?') == t.indexStyle[3]:
         iterator = '_' + i
 
     return iterator

@@ -1,5 +1,4 @@
 import lx
-import modo
 import os
 from os.path import isfile
 import form_template as ft
@@ -16,6 +15,7 @@ renderer_path = os.path.join(dialog.parentPath(curr_path), "Tila_MatcapRenderer"
 
 renderer_path = os.path.join(renderer_path,"Tila_MatcapRenderer.lxo")
 
+indexStyle = ['brak-sp', 'brak', 'sp', 'uscore', 'none']
 
 def printLog(message):
     lx.out("TILA_MATCAP_MANAGER : " + message)
