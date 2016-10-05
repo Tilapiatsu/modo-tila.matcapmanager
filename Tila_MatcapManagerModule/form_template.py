@@ -51,6 +51,8 @@ def generateForm(path, hashkey, matcaps, matcap_path):
         ET.SubElement(list, "atom", type="Proficiency").text = "basic"
         ET.SubElement(list, "atom", type="ProficiencyOverride").text = "default"
 
+    indent(configuration)
+
     tree = ET.ElementTree(configuration)
 
     tree.write(os.path.join(path, "MatcapsForm.cfg"), method='xml', encoding='utf-8', xml_declaration=True)
@@ -62,3 +64,19 @@ def prettify(elem):
     rough_string = ET.tostring(elem, 'utf-8')
     reparsed = minidom.parseString(rough_string)
     return reparsed.toprettyxml(indent="\t")
+
+
+def indent(elem, level=0):
+    i = "\n" + level*"    "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "    "
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+        for elem in elem:
+            indent(elem, level+1)
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
