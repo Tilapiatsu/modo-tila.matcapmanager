@@ -3,6 +3,11 @@ import modo
 import os
 import Tila_MatcapManagerModule as t
 
+############## TODO ###################
+'''
+ - Get default material name from preference
+
+'''
 
 def manageSceneMatcap(shader, image, image_to_import):
     assign_image = False
