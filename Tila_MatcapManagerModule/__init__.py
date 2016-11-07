@@ -17,6 +17,10 @@ renderer_path = os.path.join(renderer_path,"Tila_MatcapRenderer.lxo")
 
 indexStyle = ['brak-sp', 'brak', 'sp', 'uscore', 'none']
 
+TILA_MATCAP_UPDATE_FORM_CMD = 'tila.matcap.updateform'
+TILA_MATCAP_MANAGER_CMD = 'tila.matcap.manager'
+TILA_MATCAP_FORM_CMD = 'tila.matcap.form'
+
 def printLog(message):
     lx.out("TILA_MATCAP_MANAGER : " + message)
 

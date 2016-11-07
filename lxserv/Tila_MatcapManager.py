@@ -110,5 +110,5 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         lx.notimpl()
 
 
-lx.bless(CmdMyCustomCommand, "tila.matcap.manager")
+lx.bless(CmdMyCustomCommand, t.TILA_MATCAP_MANAGER_CMD)
 

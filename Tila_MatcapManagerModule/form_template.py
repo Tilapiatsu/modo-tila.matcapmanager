@@ -1,7 +1,20 @@
 import os
 import xml.etree.cElementTree as ET
 from xml.dom import minidom
+import Tila_MatcapManagerModule as t
 
+
+def generateMatcapCommandName():
+    command = []
+    name = []
+
+    matcaps = t.scanMatcapFolder()
+
+    for m in xrange(len(matcaps)):
+        command.append('%s %s' % (t.TILA_MATCAP_MANAGER_CMD, m))
+        name.append(os.path.splitext(os.path.basename(matcaps[m]))[0])
+
+    return [name, command]
 
 def generateForm(path, hashkey, matcaps, matcap_path):
     configuration = ET.Element("configuration")
@@ -33,7 +46,7 @@ def generateForm(path, hashkey, matcaps, matcap_path):
     ET.SubElement(sheet, "atom", type="Group").text = "Tilapiatsu/Tila_MatcapManager"
 
     for m in range(len(matcaps)):
-        list = ET.SubElement(sheet, "list", type="Control", val='cmd tila.matcap.manager %s' % m)
+        list = ET.SubElement(sheet, "list", type="Control", val='cmd %s %s' % (t.TILA_MATCAP_MANAGER_CMD, m))
         ET.SubElement(list, "atom", type="ShowWhenDisabled").text = "1"
         ET.SubElement(list, "atom", type="booleanStyle").text = "default"
         ET.SubElement(list, "atom", type="Enable").text = "1"
