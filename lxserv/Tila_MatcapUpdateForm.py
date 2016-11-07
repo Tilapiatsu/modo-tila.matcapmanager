@@ -31,6 +31,16 @@ class PopUp(lxifc.UIValueHints):
     def uiv_PopInternalName(self,index):
         return self._items[0][index]
 
+    def uiv_PopIconImage(self, index):
+        print self._items[2][index]
+        return self._items[2][index]
+
+    def uiv_PopUserName(self, index):
+        return self._items[0][index]
+
+    def uiv_PopIconSize(self):
+        return [32, 32]
+
 
 class UpdateFormNotifier(lxifc.Notifier):
     masterList = {}
@@ -88,7 +98,7 @@ class MatcapCommandList(lxifc.UIValueHints):
     def uiv_FormCommandListByIndex(self, index):
         return self._items[index]
 
-    def uiv_FormCommandUserName(self,index):
+    def uiv_FormCommandUserName(self, index):
         return self._items[index]
 
 
@@ -103,22 +113,46 @@ class CmdTilaMatcapFormCommandList(lxu.command.BasicCommand):
     def __init__(self):
         lxu.command.BasicCommand.__init__(self)
         # Add an integer attribute. The attribute is required
-        self.dyna_Add('cmds', lx.symbol.sTYPE_INTEGER)
-        # mark it as queriable
+        self.dyna_Add('matcap', lx.symbol.sTYPE_INTEGER)
         self.basic_SetFlags(0, lx.symbol.fCMDARG_QUERY)
+
+        # Setup notifier
+        self.not_svc = lx.service.NotifySys()
+        self.notifier = lx.object.Notifier()
+
+    def cmd_Flags(self):
+        return lx.symbol.fCMD_UI
+
+    def basic_Enable(self, msg):
+        return True
+
+    def cmd_Interact(self):
+        pass
 
     def arg_UIValueHints(self, index):
         # create an instance of our commands list object passing it the
         # list of commands.
         if index == 0:
-            return MatcapCommandList(cmdlist[1])
+            print cmdlist[2]
+            return PopUp(cmdlist)
 
     def cmd_Execute(self, flags):
-        # dummy execute method
-        pass
+        if not self.dyna_IsSet(0):
+            return
+
+        matcap = self.dyna_Int(0, None)
+
+        lx.eval('%s %s' % (t.TILA_MATCAP_MANAGER_CMD, matcap))
 
     def cmd_Query(self, index, vaQuery):
         # dummy query method
         pass
+
+    def cmd_NotifyAddClient(self, argument, object):
+        self.notifier = self.not_svc.Spawn(t.TILA_MATCAP_UPDATE_FORM_CMD, "")
+        self.notifier.AddClient(object)
+
+    def cmd_NotifyRemoveClient(self, object):
+        self.notifier.RemoveClient(object)
 
 lx.bless(CmdTilaMatcapFormCommandList, t.TILA_MATCAP_FORM_CMD)

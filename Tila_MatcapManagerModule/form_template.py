@@ -7,14 +7,15 @@ import Tila_MatcapManagerModule as t
 def generateMatcapCommandName():
     command = []
     name = []
-
+    matcap_path = []
     matcaps = t.scanMatcapFolder()
 
-    for m in xrange(len(matcaps)):
-        command.append('%s %s' % (t.TILA_MATCAP_MANAGER_CMD, m))
-        name.append(os.path.splitext(os.path.basename(matcaps[m]))[0])
+    for i in xrange(len(matcaps)):
+        command.append('%s %s' % (t.TILA_MATCAP_MANAGER_CMD, i))
+        name.append(os.path.splitext(os.path.basename(matcaps[i]))[0])
+        matcap_path.append(os.path.join(t.matcap_path, matcaps[i]))
 
-    return [name, command]
+    return [name, command, matcap_path]
 
 def generateForm(path, hashkey, matcaps, matcap_path):
     configuration = ET.Element("configuration")
