@@ -32,8 +32,7 @@ class PopUp(lxifc.UIValueHints):
         return self._items[0][index]
 
     def uiv_PopIconImage(self, index):
-        print self._items[2][index]
-        return self._items[2][index]
+        return lx.object.Image(self._items[2][index])
 
     def uiv_PopUserName(self, index):
         return self._items[0][index]
@@ -133,7 +132,6 @@ class CmdTilaMatcapFormCommandList(lxu.command.BasicCommand):
         # create an instance of our commands list object passing it the
         # list of commands.
         if index == 0:
-            print cmdlist[2]
             return PopUp(cmdlist)
 
     def cmd_Execute(self, flags):
