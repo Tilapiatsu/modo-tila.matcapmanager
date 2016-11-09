@@ -10,7 +10,7 @@ from Tila_MatcapManagerModule import form_template
 # This is our list of commands. You can generate this list any way you like
 # including procedurally - in fact the most common use case for a Form Command
 # List would be to generate a list of commands to show in a form procedurally.
-cmdlist = form_template.generateMatcapCommandName()
+
 
 # The UIValueHints object that returns the items in the list of commands
 # to the form.
@@ -25,14 +25,9 @@ class PopUp(lxifc.UIValueHints):
     def uiv_PopCount(self):
         return len(self._items[0])
 
-    def uiv_PopUserName(self,index):
-        return self._items[1][index]
-
-    def uiv_PopInternalName(self,index):
-        return self._items[0][index]
-
     def uiv_PopIconImage(self, index):
-        return lx.object.Image(self._items[2][index])
+        print self._items[2][index]
+        return self._items[2][index]
 
     def uiv_PopUserName(self, index):
         return self._items[0][index]
@@ -81,27 +76,6 @@ class UpdateFormNotifier(lxifc.Notifier):
 lx.bless(UpdateFormNotifier, t.TILA_MATCAP_UPDATE_FORM_CMD)
 
 
-class MatcapCommandList(lxifc.UIValueHints):
-    def __init__(self, items):
-        self._items = items
-
-    def uiv_Flags(self):
-        # This is a series of flags, although in this case we're only returning
-        # ''fVALHINT_FORM_COMMAND_LIST'' to indicate that there's a Form Command
-        # List implemented.
-        return lx.symbol.fVALHINT_FORM_COMMAND_LIST
-
-    def uiv_FormCommandListCount(self):
-        return len(self._items)
-
-    def uiv_FormCommandListByIndex(self, index):
-        return self._items[index]
-
-    def uiv_FormCommandUserName(self, index):
-        return self._items[index]
-
-
-
 # This is the command that will be replaced by the commands in MyCommandsList
 # in any form in which it's embedded as a query. It requires a queriable
 # attribute/argument but neither of the command's ''cmd_Execute'' or ''cmd_Query'' methods
@@ -132,7 +106,10 @@ class CmdTilaMatcapFormCommandList(lxu.command.BasicCommand):
         # create an instance of our commands list object passing it the
         # list of commands.
         if index == 0:
-            return PopUp(cmdlist)
+            cmdlist = form_template.generateMatcapCommandName()
+
+            popup = PopUp(cmdlist)
+            return popup
 
     def cmd_Execute(self, flags):
         if not self.dyna_IsSet(0):

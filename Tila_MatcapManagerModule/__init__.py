@@ -34,7 +34,7 @@ def scanMatcapFolder():
     global matcap_path
     matcaps = [f for f in os.listdir(matcap_path) if isfile(os.path.join(matcap_path, f))]
 
-    printMatcapList(matcaps)
+    #printMatcapList(matcaps)
 
     return matcaps
 

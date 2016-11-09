@@ -1,3 +1,4 @@
+import lx
 import os
 import xml.etree.cElementTree as ET
 from xml.dom import minidom
@@ -7,15 +8,22 @@ import Tila_MatcapManagerModule as t
 def generateMatcapCommandName():
     command = []
     name = []
-    matcap_path = []
+    matcap_image = []
+    matcap_imageSize = []
     matcaps = t.scanMatcapFolder()
+    img_svc = lx.service.Image()
 
     for i in xrange(len(matcaps)):
         command.append('%s %s' % (t.TILA_MATCAP_MANAGER_CMD, i))
         name.append(os.path.splitext(os.path.basename(matcaps[i]))[0])
-        matcap_path.append(os.path.join(t.matcap_path, matcaps[i]))
 
-    return [name, command, matcap_path]
+        matcap_path = os.path.join(t.matcap_path, matcaps[i])
+
+        image = img_svc.Load(matcap_path)
+        matcap_image.append(image)
+        matcap_imageSize.append(image.Size())
+
+    return [name, command, matcap_image, matcap_imageSize]
 
 def generateForm(path, hashkey, matcaps, matcap_path):
     configuration = ET.Element("configuration")
