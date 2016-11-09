@@ -33,7 +33,7 @@ class PopUp(lxifc.UIValueHints):
         return self._items[0][index]
 
     def uiv_PopIconSize(self):
-        return [32, 32]
+        return (True, 32, 32)
 
 
 class UpdateFormNotifier(lxifc.Notifier):
