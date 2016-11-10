@@ -1,4 +1,4 @@
-import lx
+import lx, lxu
 import os
 import xml.etree.cElementTree as ET
 from xml.dom import minidom
@@ -19,18 +19,27 @@ def generateMatcapCommandName():
 
         matcap_path = os.path.join(t.matcap_path, matcaps[i])
 
+        matcap_name = os.path.splitext(os.path.basename(matcap_path))[0]
+
         image = img_svc.Load(matcap_path)
+
+        image = generateMatcapIcon(image, matcap_name)
+
         matcap_image.append(image)
         matcap_imageSize.append(image.Size())
 
     return [name, command, matcap_image, matcap_imageSize]
 
 
-def generateMatcapIcon():
-    matcaps = t.scanMatcapFolder()
+def generateMatcapIcon(image, name):
+    img_svc = lx.service.Image()
 
-    for m in matcaps:
-        pass
+    filter = lx.object.ImageFilter(image)
+
+    image = lx.object.Image(filter.Generate(150, 150, None))
+    img_svc.Save(image, os.path.join(t.matcap_icon_path, name), 'JPG', 0)
+
+    return img_svc.Load(os.path.join(t.matcap_icon_path, name)+ '.jpg')
 
 
 def generateForm(path, hashkey, matcaps, matcap_path):

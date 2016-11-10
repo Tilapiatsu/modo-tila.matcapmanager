@@ -11,6 +11,7 @@ matcap_imageChannelName = 'Image'
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 matcap_path = os.path.join(dialog.parentPath(curr_path), "Tila_Matcaps")
+matcap_icon_path = os.path.join(dialog.parentPath(curr_path), "Tila_MatcapsIcon")
 renderer_path = os.path.join(dialog.parentPath(curr_path), "Tila_MatcapRenderer")
 
 renderer_path = os.path.join(renderer_path,"Tila_MatcapRenderer.lxo")
