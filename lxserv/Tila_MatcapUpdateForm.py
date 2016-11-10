@@ -26,7 +26,6 @@ class PopUp(lxifc.UIValueHints):
         return len(self._items[0])
 
     def uiv_PopIconImage(self, index):
-        print self._items[2][index]
         return self._items[2][index]
 
     def uiv_PopUserName(self, index):

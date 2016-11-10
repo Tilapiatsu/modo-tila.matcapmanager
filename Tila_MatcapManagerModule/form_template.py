@@ -25,6 +25,14 @@ def generateMatcapCommandName():
 
     return [name, command, matcap_image, matcap_imageSize]
 
+
+def generateMatcapIcon():
+    matcaps = t.scanMatcapFolder()
+
+    for m in matcaps:
+        pass
+
+
 def generateForm(path, hashkey, matcaps, matcap_path):
     configuration = ET.Element("configuration")
     attribute = ET.SubElement(configuration, "atom", type='Attributes')
