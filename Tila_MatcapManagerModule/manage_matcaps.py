@@ -3,6 +3,7 @@ import modo
 import os
 import Tila_MatcapManagerModule as t
 from Tila_MatcapManagerModule import image_file
+from Tila_MatcapManagerModule import dialog
 
 ############## TODO ###################
 '''
@@ -285,14 +286,18 @@ def createUserChannel(name, item, chType='matrix'):
 
 
 def generateMatcapCommandName():
+    reload(image_file)
     command = []
     name = []
     matcap_image = []
     tooltip = []
 
     matcaps = t.scanMatcapFolder()
+
+    image_file.cleanFolder(t.matcap_thumb_path)
+
     first_index = 0
-    for i in xrange(len(matcaps)+4):
+    for i in xrange(len(matcaps)+5):
 
         if i == 0:
             first_index += 1
@@ -338,6 +343,17 @@ def generateMatcapCommandName():
             matcap_image.append(image)
             tooltip.append('Remove the matcap shader and the imported image')
 
+        elif i == 4:
+            first_index += 1
+            command.append('tila.matcap.toggle')
+            name.append('Toggle Matcap Visibility')
+
+            icon_path = os.path.join(t.matcap_icon_path, 'enable.png')
+            image = image_file.loadImage(icon_path, 32, 32)
+
+            matcap_image.append(image)
+            tooltip.append('Switch all matcap shader On or Off')
+
         else:
             j = i - first_index
             command.append('%s %s' % (t.TILA_MATCAP_LOAD_CMD, j))
@@ -350,5 +366,7 @@ def generateMatcapCommandName():
             matcap_image.append(image)
 
             tooltip.append('Load matcap : %s' % name[j])
+
+    dialog.print_log('Matcap folder scanned')
 
     return [name, command, matcap_image, tooltip]

@@ -69,6 +69,7 @@ class UpdateFormNotifier(lxifc.Notifier):
 lx.bless(UpdateFormNotifier, t.TILA_MATCAP_UPDATE_FORM_NOFIFIER_CMD)
 
 class CmdTilaMatcapFormManager(lxu.command.BasicCommand):
+    cmdlist = manage_matcaps.generateMatcapCommandName()
     def __init__(self):
         lxu.command.BasicCommand.__init__(self)
         # Add an integer attribute. The attribute is required
@@ -79,7 +80,7 @@ class CmdTilaMatcapFormManager(lxu.command.BasicCommand):
         self.not_svc = lx.service.NotifySys()
         self.notifier = lx.object.Notifier()
 
-        self.cmdlist = manage_matcaps.generateMatcapCommandName()
+        reload(manage_matcaps)
 
     def cmd_Flags(self):
         return lx.symbol.fCMD_UI
@@ -101,10 +102,15 @@ class CmdTilaMatcapFormManager(lxu.command.BasicCommand):
         if not self.dyna_IsSet(0):
             return
 
+        cls = self.__class__
+
         matcap = self.dyna_Int(0, None)
 
         if matcap == 0:
-            self.cmdlist = manage_matcaps.generateMatcapCommandName()
+            reload(manage_matcaps)
+            cls.cmdlist = manage_matcaps.generateMatcapCommandName()
+            UpdateFormNotifier.reset()
+            UpdateFormNotifier().Notify(lx.symbol.fCMDNOTIFY_DATATYPE)
         else:
             lx.eval('%s' % (self.cmdlist[1][matcap]))
 

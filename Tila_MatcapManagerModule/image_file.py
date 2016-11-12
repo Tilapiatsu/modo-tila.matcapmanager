@@ -1,5 +1,6 @@
 import lx
 import os
+from os.path import isfile
 import Tila_MatcapManagerModule as t
 
 
@@ -9,16 +10,15 @@ def loadImage(filepath, width, height):
         raise AttributeError("Width or Height must be higher than 0")
 
     img_svc = lx.service.Image()
-    img_prc = lx.service.ImageProcessing()
     matcap_filename = os.path.basename(filepath)
 
-    file_resized_filename = os.path.join(t.matcap_thumb_path, 'th_' + matcap_filename)
-    file_resized_path = os.path.split(file_resized_filename)[0]
-    file_resized_ext = os.path.splitext(file_resized_filename)[1][1:]
-    file_resized_ext = file_resized_ext.upper()
+    thumb_filename = os.path.join(t.matcap_thumb_path, 'th_' + matcap_filename)
+    thumb_path = os.path.split(thumb_filename)[0]
+    thumb_ext = os.path.splitext(thumb_filename)[1][1:]
+    thumb_ext = thumb_ext.upper()
 
-    if not os.path.exists(file_resized_path):
-        os.makedirs(file_resized_path)
+    if not os.path.exists(thumb_path):
+        os.makedirs(thumb_path)
 
     image = img_svc.Load(filepath)
 
@@ -48,10 +48,15 @@ def loadImage(filepath, width, height):
             pixel.set((iR, iG, iB, pixel[3]))
 
     # Save the image to disk
-    img_svc.Save(img_output, file_resized_filename, file_resized_ext, 0)
+    img_svc.Save(img_output, thumb_filename, thumb_ext, 0)
+
+    return img_svc.Load(thumb_filename)
 
 
-    return img_svc.Load(file_resized_filename)
+def cleanFolder(path):
+    if os.path.exists(path):
+        files = [f for f in os.listdir(path) if isfile(os.path.join(path, f))]
 
-
+        for f in files:
+            os.remove(os.path.join(path, f))
 
