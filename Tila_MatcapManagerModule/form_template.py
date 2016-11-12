@@ -1,46 +1,8 @@
-import lx, lxu
+import lx, lxu.select
 import os
 import xml.etree.cElementTree as ET
 from xml.dom import minidom
 import Tila_MatcapManagerModule as t
-
-
-def generateMatcapCommandName():
-    command = []
-    name = []
-    matcap_image = []
-    matcap_imageSize = []
-    matcaps = t.scanMatcapFolder()
-    img_svc = lx.service.Image()
-
-    for i in xrange(len(matcaps)):
-        command.append('%s %s' % (t.TILA_MATCAP_MANAGER_CMD, i))
-        name.append(os.path.splitext(os.path.basename(matcaps[i]))[0])
-
-        matcap_path = os.path.join(t.matcap_path, matcaps[i])
-
-        matcap_name = os.path.splitext(os.path.basename(matcap_path))[0]
-
-        image = img_svc.Load(matcap_path)
-
-        image = generateMatcapIcon(image, matcap_name)
-
-        matcap_image.append(image)
-        matcap_imageSize.append(image.Size())
-
-    return [name, command, matcap_image, matcap_imageSize]
-
-
-def generateMatcapIcon(image, name):
-    img_svc = lx.service.Image()
-
-    filter = lx.object.ImageFilter(image)
-
-    image = lx.object.Image(filter.Generate(150, 150, None))
-    img_svc.Save(image, os.path.join(t.matcap_icon_path, name), 'JPG', 0)
-
-    return img_svc.Load(os.path.join(t.matcap_icon_path, name)+ '.jpg')
-
 
 def generateForm(path, hashkey, matcaps, matcap_path):
     configuration = ET.Element("configuration")
@@ -72,7 +34,7 @@ def generateForm(path, hashkey, matcaps, matcap_path):
     ET.SubElement(sheet, "atom", type="Group").text = "Tilapiatsu/Tila_MatcapManager"
 
     for m in range(len(matcaps)):
-        list = ET.SubElement(sheet, "list", type="Control", val='cmd %s %s' % (t.TILA_MATCAP_MANAGER_CMD, m))
+        list = ET.SubElement(sheet, "list", type="Control", val='cmd %s %s' % (t.TILA_MATCAP_LOAD_CMD, m))
         ET.SubElement(list, "atom", type="ShowWhenDisabled").text = "1"
         ET.SubElement(list, "atom", type="booleanStyle").text = "default"
         ET.SubElement(list, "atom", type="Enable").text = "1"

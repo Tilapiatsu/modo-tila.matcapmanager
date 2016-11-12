@@ -11,16 +11,18 @@ matcap_imageChannelName = 'Image'
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 matcap_path = os.path.join(dialog.parentPath(curr_path), "Tila_Matcaps")
-matcap_icon_path = os.path.join(dialog.parentPath(curr_path), "Tila_MatcapsIcon")
+matcap_thumb_path = os.path.join(dialog.parentPath(curr_path), "Tila_MatcapsIcon")
+matcap_icon_path = os.path.join(dialog.parentPath(curr_path), "Tila_Icon")
 renderer_path = os.path.join(dialog.parentPath(curr_path), "Tila_MatcapRenderer")
 
 renderer_path = os.path.join(renderer_path,"Tila_MatcapRenderer.lxo")
 
 indexStyle = ['brak-sp', 'brak', 'sp', 'uscore', 'none']
 
+TILA_MATCAP_UPDATE_FORM_NOFIFIER_CMD = 'tila.matcap.updateformnotifier'
 TILA_MATCAP_UPDATE_FORM_CMD = 'tila.matcap.updateform'
+TILA_MATCAP_LOAD_CMD = 'tila.matcap.load'
 TILA_MATCAP_MANAGER_CMD = 'tila.matcap.manager'
-TILA_MATCAP_FORM_CMD = 'tila.matcap.form'
 
 def printLog(message):
     lx.out("TILA_MATCAP_MANAGER : " + message)
@@ -53,4 +55,5 @@ def generateFormTemplate(silent=True):
 
     if not silent:
         dialog.init_message('info', 'Done', 'Form Updated! Please, restart Modo to refresh it.')
+
 

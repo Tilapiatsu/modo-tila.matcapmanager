@@ -5,15 +5,7 @@ import lxifc
 import lxu.command
 import Tila_MatcapManagerModule as t
 
-from Tila_MatcapManagerModule import form_template
-
-# This is our list of commands. You can generate this list any way you like
-# including procedurally - in fact the most common use case for a Form Command
-# List would be to generate a list of commands to show in a form procedurally.
-
-
-# The UIValueHints object that returns the items in the list of commands
-# to the form.
+from Tila_MatcapManagerModule import manage_matcaps
 
 class PopUp(lxifc.UIValueHints):
     def __init__(self, items):
@@ -34,6 +26,8 @@ class PopUp(lxifc.UIValueHints):
     def uiv_PopIconSize(self):
         return (True, 32, 32)
 
+    def PopToolTip(self, index):
+        return self._items[3][index]
 
 class UpdateFormNotifier(lxifc.Notifier):
     masterList = {}
@@ -49,7 +43,7 @@ class UpdateFormNotifier(lxifc.Notifier):
         cls._presetValuesChanged = False
 
     def noti_Name(self):
-        return t.TILA_MATCAP_UPDATE_FORM_CMD
+        return t.TILA_MATCAP_UPDATE_FORM_NOFIFIER_CMD
 
     def noti_AddClient(self, event):
         self.masterList[event.__peekobj__()] = event
@@ -72,16 +66,9 @@ class UpdateFormNotifier(lxifc.Notifier):
         cls._presetValuesChanged = True
 
 
-lx.bless(UpdateFormNotifier, t.TILA_MATCAP_UPDATE_FORM_CMD)
+lx.bless(UpdateFormNotifier, t.TILA_MATCAP_UPDATE_FORM_NOFIFIER_CMD)
 
-
-# This is the command that will be replaced by the commands in MyCommandsList
-# in any form in which it's embedded as a query. It requires a queriable
-# attribute/argument but neither of the command's ''cmd_Execute'' or ''cmd_Query'' methods
-# need to be implemented as neither will be called when the argument is queried
-# in a form.  You can still implement them, but they will only be used when
-# executing/querying from scripts or CHist etc.
-class CmdTilaMatcapFormCommandList(lxu.command.BasicCommand):
+class CmdTilaMatcapFormManager(lxu.command.BasicCommand):
     def __init__(self):
         lxu.command.BasicCommand.__init__(self)
         # Add an integer attribute. The attribute is required
@@ -91,6 +78,8 @@ class CmdTilaMatcapFormCommandList(lxu.command.BasicCommand):
         # Setup notifier
         self.not_svc = lx.service.NotifySys()
         self.notifier = lx.object.Notifier()
+
+        self.cmdlist = manage_matcaps.generateMatcapCommandName()
 
     def cmd_Flags(self):
         return lx.symbol.fCMD_UI
@@ -105,9 +94,7 @@ class CmdTilaMatcapFormCommandList(lxu.command.BasicCommand):
         # create an instance of our commands list object passing it the
         # list of commands.
         if index == 0:
-            cmdlist = form_template.generateMatcapCommandName()
-
-            popup = PopUp(cmdlist)
+            popup = PopUp(self.cmdlist)
             return popup
 
     def cmd_Execute(self, flags):
@@ -116,17 +103,20 @@ class CmdTilaMatcapFormCommandList(lxu.command.BasicCommand):
 
         matcap = self.dyna_Int(0, None)
 
-        lx.eval('%s %s' % (t.TILA_MATCAP_MANAGER_CMD, matcap))
+        if matcap == 0:
+            self.cmdlist = manage_matcaps.generateMatcapCommandName()
+        else:
+            lx.eval('%s' % (self.cmdlist[1][matcap]))
 
     def cmd_Query(self, index, vaQuery):
         # dummy query method
         pass
 
     def cmd_NotifyAddClient(self, argument, object):
-        self.notifier = self.not_svc.Spawn(t.TILA_MATCAP_UPDATE_FORM_CMD, "")
+        self.notifier = self.not_svc.Spawn(t.TILA_MATCAP_UPDATE_FORM_NOFIFIER_CMD, "")
         self.notifier.AddClient(object)
 
     def cmd_NotifyRemoveClient(self, object):
         self.notifier.RemoveClient(object)
 
-lx.bless(CmdTilaMatcapFormCommandList, t.TILA_MATCAP_FORM_CMD)
+lx.bless(CmdTilaMatcapFormManager, t.TILA_MATCAP_MANAGER_CMD)

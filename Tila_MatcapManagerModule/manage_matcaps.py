@@ -2,6 +2,7 @@ import lx
 import modo
 import os
 import Tila_MatcapManagerModule as t
+from Tila_MatcapManagerModule import image_file
 
 ############## TODO ###################
 '''
@@ -281,3 +282,73 @@ def createUserChannel(name, item, chType='matrix'):
             pass
     except:
         lx.eval('channel.create name:%s type:%s item:%s' % (name, chType, item.id))
+
+
+def generateMatcapCommandName():
+    command = []
+    name = []
+    matcap_image = []
+    tooltip = []
+
+    matcaps = t.scanMatcapFolder()
+    first_index = 0
+    for i in xrange(len(matcaps)+4):
+
+        if i == 0:
+            first_index += 1
+            command.append(t.TILA_MATCAP_UPDATE_FORM_CMD)
+            name.append('Scan Matcap Folder')
+
+            icon_path = os.path.join(t.matcap_icon_path, 'magnifyingglass.png')
+            image = image_file.loadImage(icon_path, 32, 32)
+
+            matcap_image.append(image)
+            tooltip.append('Automatically scan the matcap folder and generate the form')
+
+        elif i == 1:
+            first_index += 1
+            command.append('tila.matcap.open 0')
+            name.append('Open Matcap Folder')
+
+            icon_path = os.path.join(t.matcap_icon_path, 'folder.png')
+            image = image_file.loadImage(icon_path, 32, 32)
+
+            matcap_image.append(image)
+            tooltip.append('Open Matcap Folder')
+
+        elif i == 2:
+            first_index += 1
+            command.append('tila.matcap.open 1')
+            name.append('Open Matcap Renderer Scene')
+
+            icon_path = os.path.join(t.matcap_icon_path, 'modo_scene.png')
+            image = image_file.loadImage(icon_path, 32, 32)
+
+            matcap_image.append(image)
+            tooltip.append('Open Matcap Renderer Scene')
+
+        elif i == 3:
+            first_index += 1
+            command.append('tila.matcap.load 0 true')
+            name.append('Clean Scene')
+
+            icon_path = os.path.join(t.matcap_icon_path, 'broom.png')
+            image = image_file.loadImage(icon_path, 32, 32)
+
+            matcap_image.append(image)
+            tooltip.append('Remove the matcap shader and the imported image')
+
+        else:
+            j = i - first_index
+            command.append('%s %s' % (t.TILA_MATCAP_LOAD_CMD, j))
+            name.append(os.path.splitext(os.path.basename(matcaps[j]))[0])
+
+            matcap_path = os.path.join(t.matcap_path, matcaps[j])
+
+            image = image_file.loadImage(matcap_path, 32, 32)
+
+            matcap_image.append(image)
+
+            tooltip.append('Load matcap : %s' % name[j])
+
+    return [name, command, matcap_image, tooltip]

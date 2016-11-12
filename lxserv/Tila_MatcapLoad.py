@@ -9,7 +9,7 @@ from Tila_MatcapManagerModule import manage_matcaps as mm
 from Tila_MatcapManagerModule import user_value
 
 
-class CmdMyCustomCommand(lxu.command.BasicCommand):
+class CmdTilaMatcapLoad(lxu.command.BasicCommand):
     def __init__(self):
         lxu.command.BasicCommand.__init__(self)
 
@@ -110,5 +110,5 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         lx.notimpl()
 
 
-lx.bless(CmdMyCustomCommand, t.TILA_MATCAP_MANAGER_CMD)
+lx.bless(CmdTilaMatcapLoad, t.TILA_MATCAP_LOAD_CMD)
 
