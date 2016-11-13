@@ -1,5 +1,4 @@
 .idea/
-*.pyc
 MatcapsForm.cfg
 *.exr
 Tila_MatcapsIcon/
