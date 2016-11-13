@@ -41,4 +41,4 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         lx.notimpl()
 
 
-lx.bless(CmdMyCustomCommand, "tila.matcap.toggle")
+lx.bless(CmdMyCustomCommand, t.TILA_MATCAP_TOGGLE_CMD)

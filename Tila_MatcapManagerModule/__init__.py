@@ -23,6 +23,9 @@ TILA_MATCAP_UPDATE_FORM_NOFIFIER_CMD = 'tila.matcap.updateformnotifier'
 TILA_MATCAP_UPDATE_FORM_CMD = 'tila.matcap.updateform'
 TILA_MATCAP_LOAD_CMD = 'tila.matcap.load'
 TILA_MATCAP_MANAGER_CMD = 'tila.matcap.manager'
+TILA_MATCAP_OPEN_CMD = 'tila.matcap.open'
+TILA_MATCAP_TOGGLE_CMD = 'tila.matcap.toggle'
+
 
 def printLog(message):
     lx.out("TILA_MATCAP_MANAGER : " + message)

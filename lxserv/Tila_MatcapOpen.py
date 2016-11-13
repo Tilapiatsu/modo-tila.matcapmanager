@@ -36,4 +36,4 @@ class CmdMyCustomCommand(lxu.command.BasicCommand):
         lx.notimpl()
 
 
-lx.bless(CmdMyCustomCommand, "tila.matcap.open")
+lx.bless(CmdMyCustomCommand, t.TILA_MATCAP_OPEN_CMD)
