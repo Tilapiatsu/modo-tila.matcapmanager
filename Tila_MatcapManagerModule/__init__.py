@@ -1,7 +1,6 @@
 import lx
 import os
 from os.path import isfile
-import form_template as ft
 import dialog
 
 matcap_name = 'tila_matcap'
@@ -40,11 +39,9 @@ def scanMatcapFolder():
     global matcap_path
     matcaps = [f for f in os.listdir(matcap_path) if isfile(os.path.join(matcap_path, f))]
 
-    #printMatcapList(matcaps)
-
     return matcaps
 
-
+'''
 def generateFormTemplate(silent=True):
     reload(ft)
     global curr_path
@@ -58,5 +55,4 @@ def generateFormTemplate(silent=True):
 
     if not silent:
         dialog.init_message('info', 'Done', 'Form Updated! Please, restart Modo to refresh it.')
-
-
+'''

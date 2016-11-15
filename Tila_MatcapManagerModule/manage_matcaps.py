@@ -1,15 +1,9 @@
-import lx
+import lx, lxu
 import modo
 import os
 import Tila_MatcapManagerModule as t
 from Tila_MatcapManagerModule import image_file
 from Tila_MatcapManagerModule import dialog
-
-############## TODO ###################
-'''
- - Get default material name from preference
-
-'''
 
 def manageSceneMatcap(shader, image, image_to_import):
     assign_image = False
@@ -53,11 +47,11 @@ def manageSelectionMatcap(masterGroup, image, image_to_import):
         createUserChannel(channelName, group, 'string')
         group.channel(channelName).set(name)
 
-        mat = createMaterialGroup(name, image_to_import, group)
+        mat = createMaterialGroup(name, group)
     else:
         createUserChannel(channelName, masterGroup, 'string')
         masterGroup.channel(channelName).set(name)
-        mat = createMaterialGroup(name, image_to_import, masterGroup)
+        mat = createMaterialGroup(name, masterGroup)
 
     if image == []:
         importImage(image_to_import)
@@ -87,7 +81,7 @@ def CreateShaderGroup():
     return group
 
 
-def createMaterialGroup(name, image_to_import, group):
+def createMaterialGroup(name, group):
     materialExist = itemExist(name + '_GRP')
 
     assignMaterial(name + '_GRP')
@@ -146,7 +140,6 @@ def convertMaterialToMatcap(mat):
     mat = scn.item(name + getIteratorTemplate(2))
     mat.name = mat.name[:-2]
     return mat
-    #scn.select(selection)
 
 
 def getLatestMaterialCreated(exist, name):
@@ -190,12 +183,12 @@ def getIteratorTemplate(i):
     return iterator
 
 
-
 def placeShaderOnTop(item, glOnly):
     scn = modo.Scene()
     selection = scn.selected
     scn.select(item)
-    lx.eval('texture.parent polyRender006 -1')
+    shader = modo.Item(item)
+    shader.setParent(scn.renderItem, index=len(get_root_items()))
     if glOnly:
         lx.eval('item.channel matcapShader$glOnly true')
     scn.select(selection)
@@ -346,3 +339,52 @@ def feed_popup_command_arr(arr, command, name, image_path, tooltip, resize=False
 
     arr[2].append(image)
     arr[3].append(tooltip)
+
+
+def get_root_items(itype=None):
+    ''' gets items in the root of the shader tree. If an Item type is supplied
+        as an argument method returns only items of that type.
+
+    '''
+    current_scene = lxu.select.SceneSelection().current()
+
+    scene_service = lx.service.Scene()
+    rootitems = []
+    # get the render item type
+    render_item_type = scene_service.ItemTypeLookup(lx.symbol.sITYPE_POLYRENDER)
+    # currently there's only ever one render item in the scene so we can ask for
+    # any item of that type
+    render_item = current_scene.AnyItemOfType(render_item_type)
+    if render_item.test():
+        children = get_children(render_item)
+        for child in children:
+            # if an item type was passed in as an argument just add items of
+            # that type.
+            if itype:
+                item_type = scene_service.ItemTypeLookup(itype)
+                if child.TestType(item_type):
+                    rootitems.append(child)
+                continue
+            # otherwise just append the current item
+            rootitems.append(child)
+    return rootitems
+
+
+def get_children(item, itype=None):
+    ''' returns the children of an item. If an item type is supplied method returns
+        only items of that specific type.
+
+    '''
+
+    scene_service = lx.service.Scene()
+    children = []
+    numchildren = item.SubCount()
+    for x in range(numchildren):
+        child = item.SubByIndex(x)
+        if itype:
+            item_type = scene_service.ItemTypeLookup(itype)
+            if child.TestType(item_type):
+                children.append(child)
+            continue
+        children.append(child)
+    return children

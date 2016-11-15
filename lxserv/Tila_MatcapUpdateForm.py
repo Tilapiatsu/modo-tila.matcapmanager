@@ -112,6 +112,7 @@ class CmdTilaMatcapFormManager(lxu.command.BasicCommand):
             UpdateFormNotifier.reset()
             UpdateFormNotifier().Notify(lx.symbol.fCMDNOTIFY_DATATYPE)
         else:
+            print self.cmdlist[1][matcap]
             lx.eval('%s' % (self.cmdlist[1][matcap]))
 
     def cmd_Query(self, index, vaQuery):
