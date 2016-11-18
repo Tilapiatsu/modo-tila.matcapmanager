@@ -25,3 +25,7 @@ Just copy the kit into your Modo's `User Script Folder` :  `System`&gt;`Open Us
 * Load modo scene to design and render matcap easily <img src="https://raw.githubusercontent.com/Tilapiatsu/modo_kit_assets/master/tila_matcap_manager/1.0.0/Tila_MatcapManager_OpenMatcapRenderer.png" \>
 
 ***
+
+### Contact
+
+Any suggestion or bug report, please contact me at support@tilapiatsu.fr
