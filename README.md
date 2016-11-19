@@ -1,5 +1,6 @@
 # Matcap Manager for Modo
 <p align="center"><img src="https://raw.githubusercontent.com/Tilapiatsu/modo_kit_assets/master/tila_matcap_manager/1.0.0/Tila_MatcapManager_overview.png" /></p>
+<p align="center"><img src="https://raw.githubusercontent.com/Tilapiatsu/modo_kit_assets/master/tila_matcap_manager/1.0.0/Tila_MatcapManager_StanfordDragon.gif" /></p>
 
 Tested with Modo10.1v2+ / windows 10
 
