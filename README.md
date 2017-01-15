@@ -4,7 +4,7 @@
 
 Tested with Modo10.1v2+ / windows 10
 
-Matcap Manager is a modo kit to easily load &amp; assign matcap shaders to the scene or selection. It also provides a modo scene to render matcap easily so you can create your own.
+Matcap Manager is a modo kit that will help you easily load &amp; assign matcap shaders to the scene or selection. It also provides a modo scene in which you can easily render your own matcaps.
 
 ***
 
@@ -18,9 +18,9 @@ Just copy the kit into your Modo's `User Script Folder` :  `System`&gt;`Open Us
 
 * Access your matcap folder by clicking on <img src="https://raw.githubusercontent.com/Tilapiatsu/modo_kit_assets/master/tila_matcap_manager/1.0.0/Tila_MatcapManager_OpenMatcapFolder.png" \>
 * Copy your favorite one into it.
-* Clic on the `scan matcap folder button` to refrersh the list form <img src="https://raw.githubusercontent.com/Tilapiatsu/modo_kit_assets/master/tila_matcap_manager/1.0.0/Tila_MatcapManager_ScanMatcapFolder.png" \>
-* Clic on a matcap to assign to all items in the scene
-* Clic on the arrow icon to assign matcap to selected item(s) or polygon(s) <img src="https://raw.githubusercontent.com/Tilapiatsu/modo_kit_assets/master/tila_matcap_manager/1.0.0/Tila_MatcapManager_AssignToSelection.png" \>
+* Click on the `scan matcap folder button` to refrersh the list form <img src="https://raw.githubusercontent.com/Tilapiatsu/modo_kit_assets/master/tila_matcap_manager/1.0.0/Tila_MatcapManager_ScanMatcapFolder.png" \>
+* Click on a matcap to assign it to all items in the scene
+* Click on the arrow icon to assign matcap to selected item(s) or polygon(s) <img src="https://raw.githubusercontent.com/Tilapiatsu/modo_kit_assets/master/tila_matcap_manager/1.0.0/Tila_MatcapManager_AssignToSelection.png" \>
 * Toggle visibility of matcaps for the current scene <img src="https://raw.githubusercontent.com/Tilapiatsu/modo_kit_assets/master/tila_matcap_manager/1.0.0/Tila_MatcapManager_Toggle.png" \>
 * Get rid of all matcap contents created by the kit on your scene ( matcap shader and imported images ) <img src="https://raw.githubusercontent.com/Tilapiatsu/modo_kit_assets/master/tila_matcap_manager/1.0.0/Tila_MatcapManager_CleanScene.png" \>
 * Load modo scene to design and render matcap easily <img src="https://raw.githubusercontent.com/Tilapiatsu/modo_kit_assets/master/tila_matcap_manager/1.0.0/Tila_MatcapManager_OpenMatcapRenderer.png" \>
