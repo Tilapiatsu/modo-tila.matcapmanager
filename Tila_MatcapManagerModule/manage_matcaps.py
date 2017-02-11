@@ -290,7 +290,7 @@ def generateMatcapCommandName():
     matcaps = t.scanMatcapFolder()
 
     image_file.cleanFolder(t.matcap_thumb_path)
-
+    '''
     command = t.TILA_MATCAP_UPDATE_FORM_CMD
     icon_path = os.path.join(t.matcap_icon_path, 'magnifyingglass.png')
     name = 'Scan Matcap Folder'
@@ -314,7 +314,7 @@ def generateMatcapCommandName():
     name = 'Clean Scene'
     tooltip = 'Remove the matcap shader and the imported image'
     feed_popup_command_arr(matcap_command, command, name, icon_path, tooltip)
-
+    '''
     for i in xrange(len(matcaps)):
         command = '%s %s' % (t.TILA_MATCAP_LOAD_CMD, i)
         icon_path = os.path.join(t.matcap_path, matcaps[i])
