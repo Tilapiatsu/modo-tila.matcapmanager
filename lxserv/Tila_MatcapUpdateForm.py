@@ -102,18 +102,10 @@ class CmdTilaMatcapFormManager(lxu.command.BasicCommand):
         if not self.dyna_IsSet(0):
             return
 
-        cls = self.__class__
-
         matcap = self.dyna_Int(0, None)
 
-        if matcap == 0:
-            reload(manage_matcaps)
-            cls.cmdlist = manage_matcaps.generateMatcapCommandName()
-            UpdateFormNotifier.reset()
-            UpdateFormNotifier().Notify(lx.symbol.fCMDNOTIFY_DATATYPE)
-        else:
-            print self.cmdlist[1][matcap]
-            lx.eval('%s' % (self.cmdlist[1][matcap]))
+        print self.cmdlist[1][matcap]
+        lx.eval('%s' % (self.cmdlist[1][matcap]))
 
     def cmd_Query(self, index, vaQuery):
         # dummy query method
@@ -127,3 +119,26 @@ class CmdTilaMatcapFormManager(lxu.command.BasicCommand):
         self.notifier.RemoveClient(object)
 
 lx.bless(CmdTilaMatcapFormManager, t.TILA_MATCAP_MANAGER_CMD)
+
+class CmdTilaMatcapUpdateForm(CmdTilaMatcapFormManager):
+    def __init__(self):
+        lxu.command.BasicCommand.__init__(self)
+        self.not_svc = lx.service.NotifySys()
+        self.notifier = lx.object.Notifier()
+
+    def cmd_Flags(self):
+        return lx.symbol.fCMD_UI
+
+    def basic_Enable(self, msg):
+        return True
+
+    def cmd_Interact(self):
+        pass
+
+    def cmd_Execute(self, flags):
+        reload(manage_matcaps)
+        CmdTilaMatcapFormManager.cmdlist = manage_matcaps.generateMatcapCommandName()
+        UpdateFormNotifier.reset()
+        UpdateFormNotifier().Notify(lx.symbol.fCMDNOTIFY_DATATYPE)
+
+lx.bless(CmdTilaMatcapUpdateForm, t.TILA_MATCAP_UPDATE_FORM_CMD)
